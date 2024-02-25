@@ -11,6 +11,7 @@ import com.luisd.japi.domain.UserDomain;
 import com.luisd.japi.domain.dto.UserDTO;
 import com.luisd.japi.repostories.UserRepository;
 import com.luisd.japi.service.UserService;
+import com.luisd.japi.service.exceptions.DataIntegratyViolationException;
 import com.luisd.japi.service.exceptions.ObjectNotFoundException;
 
 @Service
@@ -31,6 +32,14 @@ public class UserServiceImpl implements UserService{
 
   @Override
   public UserDomain create(UserDTO obj) {
+    findByEmail(obj);
     return userRepository.save(mapper.map(obj, UserDomain.class));
+  }
+
+  private void findByEmail(UserDTO obj) {
+    Optional<UserDomain> user = userRepository.findByEmail(obj.getEmail());
+    if (user.isPresent()) {
+      throw new DataIntegratyViolationException("E-mail already in use");
+    }
   }
 }
