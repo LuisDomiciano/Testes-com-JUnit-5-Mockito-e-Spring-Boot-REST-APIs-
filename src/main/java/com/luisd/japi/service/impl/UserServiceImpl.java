@@ -1,5 +1,6 @@
 package com.luisd.japi.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,4 +21,7 @@ public class UserServiceImpl implements UserService{
     return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found!"));
   }
   
+  public List<UserDomain> findAll() {
+    return userRepository.findAll();
+  }
 }
