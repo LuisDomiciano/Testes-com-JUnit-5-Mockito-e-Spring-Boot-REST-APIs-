@@ -11,4 +11,5 @@ public interface UserService {
   List<UserDomain> findAll();
   UserDomain create(UserDTO obj);
   UserDomain update(UserDTO obj);
+  void delete(Integer id);
 }
