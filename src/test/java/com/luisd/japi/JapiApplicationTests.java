@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class JapiApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void main() {
+		JapiApplication.main(new String[] {});
 	}
-
 }
