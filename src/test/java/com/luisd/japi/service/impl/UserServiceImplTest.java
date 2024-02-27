@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.luisd.japi.domain.UserDomain;
 import com.luisd.japi.domain.dto.UserDTO;
 import com.luisd.japi.repostories.UserRepository;
+import com.luisd.japi.service.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
 public class UserServiceImplTest {
@@ -62,6 +63,17 @@ public class UserServiceImplTest {
     assertNotNull(response);
     assertEquals(UserDomain.class, response.getClass());
     assertEquals(ID, response.getId());
+  }
+
+  @Test
+  void whenFindByIdThenReturnAnObjectNotFoundException() {
+    when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Object not found"));
+    try {
+      userServiceImpl.findById(ID);
+    } catch (Exception ex) {
+      assertEquals(ObjectNotFoundException.class, ex.getClass());
+      assertEquals("Object not found", ex.getMessage());
+    }
   }
 
   @Test

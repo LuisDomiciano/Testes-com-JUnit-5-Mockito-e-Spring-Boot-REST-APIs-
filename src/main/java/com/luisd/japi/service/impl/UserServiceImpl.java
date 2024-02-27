@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService{
   @Override
   public UserDomain findById(Integer id) {
     Optional<UserDomain> obj = userRepository.findById(id); 
-    return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found!"));
+    return obj.orElseThrow(() -> new ObjectNotFoundException("Object not found"));
   }
   
   public List<UserDomain> findAll() {
