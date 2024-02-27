@@ -32,7 +32,9 @@ public class UserServiceImplTest {
   private static final String EMAIL = "zo@mail.com";
   private static final String PASSWORD = "aiP2j7Is";
   private static final Integer INDEX = 0;
-  
+  private static final String EMAIL_ALREADY_IN_USE = "E-mail already in use";
+  private static final String OBJECT_NOT_FOUND = "Object not found";
+
   private @InjectMocks UserServiceImpl userServiceImpl;
   private @Mock UserRepository userRepository;
   private @Mock ModelMapper modelMapper;
@@ -61,9 +63,9 @@ public class UserServiceImplTest {
     try {
       optionalUser.get().setId(2);
       userServiceImpl.create(userDTO);
-    } catch (Exception ex) {
-      assertEquals(DataIntegratyViolationException.class, ex.getClass());
-      assertEquals("E-mail already in use", ex.getMessage());
+    } catch (Exception exception) {
+      assertEquals(DataIntegratyViolationException.class, exception.getClass());
+      assertEquals(EMAIL_ALREADY_IN_USE, exception.getMessage());
     }
   }
 
@@ -99,12 +101,12 @@ public class UserServiceImplTest {
 
   @Test
   void whenFindByIdThenReturnAnObjectNotFoundException() {
-    when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Object not found"));
+    when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJECT_NOT_FOUND));
     try {
       userServiceImpl.findById(ID);
-    } catch (Exception ex) {
-      assertEquals(ObjectNotFoundException.class, ex.getClass());
-      assertEquals("Object not found", ex.getMessage());
+    } catch (Exception exception) {
+      assertEquals(ObjectNotFoundException.class, exception.getClass());
+      assertEquals(OBJECT_NOT_FOUND, exception.getMessage());
     }
   }
 
@@ -120,9 +122,21 @@ public class UserServiceImplTest {
     assertEquals(PASSWORD, response.getPassword());
   }
 
+  @Test
+  void whenUpdateThenReturnADataIntegrityViolationException() {
+    when(userRepository.findByEmail(anyString())).thenReturn(optionalUser);
+    try {
+      optionalUser.get().setId(2);
+      userServiceImpl.create(userDTO);
+    } catch (Exception exception) {
+      assertEquals(DataIntegratyViolationException.class, exception.getClass());
+      assertEquals(EMAIL_ALREADY_IN_USE, exception.getMessage());
+    }
+  }
+
   private void startUser() {
     user = new UserDomain(ID, NAME, EMAIL,  PASSWORD);
     userDTO = new UserDTO(ID, NAME, EMAIL, PASSWORD);
     optionalUser = Optional.of(new UserDomain(ID, NAME, EMAIL, PASSWORD));
-}
+  }
 }
