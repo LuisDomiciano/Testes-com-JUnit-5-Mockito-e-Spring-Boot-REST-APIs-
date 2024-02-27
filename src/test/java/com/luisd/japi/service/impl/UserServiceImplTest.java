@@ -49,7 +49,7 @@ public class UserServiceImplTest {
   @Test
   void whenCreateThenReturnSuccess() {
     when(userRepository.save(any())).thenReturn(user);
-    UserDomain response = userServiceImpl.create(userDTO);
+    var response = userServiceImpl.create(userDTO);
     assertNotNull(response);
     assertEquals(UserDomain.class, response.getClass());
     assertEquals(ID, response.getId());
@@ -109,8 +109,15 @@ public class UserServiceImplTest {
   }
 
   @Test
-  void testUpdate() {
-
+  void whenUpdateThenReturnSuccess() {
+    when(userRepository.save(any())).thenReturn(user);
+    var response = userServiceImpl.update(userDTO);
+    assertNotNull(response);
+    assertEquals(UserDomain.class, response.getClass());
+    assertEquals(ID, response.getId());
+    assertEquals(NAME, response.getName());
+    assertEquals(EMAIL, response.getEmail());
+    assertEquals(PASSWORD, response.getPassword());
   }
 
   private void startUser() {
