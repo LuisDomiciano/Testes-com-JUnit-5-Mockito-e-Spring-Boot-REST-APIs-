@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import com.luisd.japi.service.exceptions.DataIntegratyViolationException;
 import com.luisd.japi.service.exceptions.ObjectNotFoundException;
 
 public class ResourceExceptionHandlerTest {
@@ -18,6 +19,7 @@ public class ResourceExceptionHandlerTest {
   private @InjectMocks ResourceExceptionHandler resourceExceptionHandler;
   
   private static final String OBJECT_NOT_FOUND = "Object not found";
+  private static final String EMAIL_ALREADY_IN_USE = "E-mail already in use";
 
   @BeforeEach
   void setUp() {
@@ -26,7 +28,15 @@ public class ResourceExceptionHandlerTest {
 
   @Test
   void testDataIntegratyViolationException() {
+    ResponseEntity<StandardError> response = resourceExceptionHandler.dataIntegratyViolationException(new DataIntegratyViolationException(EMAIL_ALREADY_IN_USE), new MockHttpServletRequest());
 
+    assertNotNull(response);
+    assertNotNull(response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertEquals(ResponseEntity.class, response.getClass());
+    assertEquals(StandardError.class, response.getBody().getClass());
+    assertEquals(EMAIL_ALREADY_IN_USE, response.getBody().getError());
+    assertEquals(400, response.getBody().getStatus());
   }
 
   @Test
