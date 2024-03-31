@@ -83,6 +83,17 @@ public class UserResourceTest {
     assertEquals(PASSWORD, response.getBody().get(INDEX).getPassword());
   }
 
+  @Test
+  void whenCreateThenReturnCreated() {
+    when(userServiceImpl.create(any())).thenReturn(user);
+
+    ResponseEntity<UserDTO> response = userResource.create(userDTO);
+    
+    assertEquals(ResponseEntity.class, response.getClass());
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+    assertNotNull(response.getHeaders().get("Location"));
+  }
+
   private void startUser() {
     user = new UserDomain(ID, NAME, EMAIL,  PASSWORD);
     userDTO = new UserDTO(ID, NAME, EMAIL, PASSWORD);
