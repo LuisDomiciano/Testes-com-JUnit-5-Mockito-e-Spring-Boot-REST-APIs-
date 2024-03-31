@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -110,6 +113,18 @@ public class UserResourceTest {
     assertEquals(ID, response.getBody().getId());
     assertEquals(NAME, response.getBody().getName());
     assertEquals(EMAIL, response.getBody().getEmail());
+  }
+
+  @Test
+  void whenDeteleThenReturnSuccess() {
+    doNothing().when(userServiceImpl).delete(anyInt());
+
+    ResponseEntity<UserDTO> response = userResource.delete(ID);
+
+    assertNotNull(response);
+    assertEquals(ResponseEntity.class, response.getClass());
+    verify(userServiceImpl, times(1)).delete(anyInt());
+    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
   }
 
   private void startUser() {
